@@ -9,22 +9,30 @@ type VideoInfo = {
 function App() {
   const [url, setUrl] = useState('');
   const [video, setVideo] = useState<VideoInfo | null>(null);
+  const [error, setError] = useState<string | null>(null);
   
   async function handleSearch() {
-   const response = await fetch("http://localhost:3000/api/video/info", {
-     method: "POST",
-     headers: {
-       "Content-Type": "application/json",
-     },
-     body: JSON.stringify({
-       url: url,
-     })
-   })
-   const data = await response.json();
-  
-   console.log("React: ", data);
+    setError(null);
+    setVideo(null);
+    const response = await fetch("http://localhost:3000/api/video/info", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: url,
+      })
+    })
+    const data = await response.json();
+    
+    console.log("React: ", data);
 
-   setVideo(data.data);
+    if (!response.ok) {
+      setError(data.error);
+      return;
+    }
+
+    setVideo(data.data);
   } 
   return (
     <div className="App">
@@ -39,6 +47,9 @@ function App() {
         Buscar
       </button>
 
+      {error && (
+        <p style={{ color: 'red' }}>{error}</p>
+      )}
       {video && (
         <div>
           <h2>{video.title}</h2>
