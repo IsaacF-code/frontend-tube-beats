@@ -10,30 +10,42 @@ function App() {
   const [url, setUrl] = useState('');
   const [video, setVideo] = useState<VideoInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
+  const [loading, setLoading] = useState(false);
+
   async function handleSearch() {
     setError(null);
     setVideo(null);
-    const response = await fetch("http://localhost:3000/api/video/info", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        url: url,
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3000/api/video/info", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: url,
+        })
       })
-    })
-    const data = await response.json();
-    
-    console.log("React: ", data);
 
-    if (!response.ok) {
-      setError(data.error);
-      return;
+      const data = await response.json();
+      
+      console.log("React: ", data);
+
+      if (!response.ok) {
+        setError(data.error);
+        return;
+      }
+
+      setVideo(data.data);
+    } catch (error) {
+      console.error("Erro: ", error);
+      
+      setError("Erro ao buscar informações do vídeo. Por favor, tente novamente mais tarde.");
+    } finally {
+      setLoading(false);
     }
-
-    setVideo(data.data);
-  } 
+    
+  }
   return (
     <div className="App">
       <h1>Tube Beats</h1>
@@ -43,8 +55,8 @@ function App() {
         value={url}
         onChange={(e) => setUrl(e.target.value)}
         />
-      <button onClick={handleSearch}>
-        Buscar
+      <button onClick={handleSearch} disabled={loading}>
+        {loading ? "Buscando..." : "Buscar"}
       </button>
 
       {error && (
