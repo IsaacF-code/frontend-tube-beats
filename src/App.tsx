@@ -22,6 +22,11 @@ function App() {
       return;
     }
 
+    if (!isYoutubeUrl(url)) {
+      setError("Por favor, insira uma URL válida do YouTube.");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch("http://localhost:3000/api/video/info", {
@@ -63,6 +68,17 @@ function App() {
       const secondsFormatted = secondsRemaining.toString().padStart(2, '0');
       const durationFormatted = `${minutesFormatted}:${secondsFormatted}`;
       return durationFormatted;
+  }
+
+  function isYoutubeUrl(url: string): boolean {
+    try {
+      const parsedUrl = new URL(url);
+      return parsedUrl.hostname === "www.youtube.com" || 
+             parsedUrl.hostname === "youtube.com" ||
+             parsedUrl.hostname === "youtu.be";
+    } catch {
+      return false;
+    }
   }
 
   return (
