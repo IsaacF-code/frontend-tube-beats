@@ -3,6 +3,7 @@ import { useState } from 'react';
 type VideoInfo = {
   title: string;
   duration: number;
+  durationFormatted: string;
   thumbnail: string;
 };
 
@@ -15,6 +16,12 @@ function App() {
   async function handleSearch() {
     setError(null);
     setVideo(null);
+    
+    if (!url.trim()) {
+      setError("Por favor, insira uma URL do YouTube.");
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch("http://localhost:3000/api/video/info", {
@@ -35,8 +42,10 @@ function App() {
         setError(data.error);
         return;
       }
-
-      setVideo(data.data);
+      setVideo({
+        ...data.data,
+        durationFormatted: formatDuration(data.data.duration)
+      });
     } catch (error) {
       console.error("Erro: ", error);
       
@@ -46,6 +55,16 @@ function App() {
     }
     
   }
+
+  function formatDuration(duration: number): string { // Convertendo a duração de segundos para minutos
+      const minutes = Math.floor(duration / 60);
+      const secondsRemaining = duration % 60;
+      const minutesFormatted = minutes.toString().padStart(2, '0');
+      const secondsFormatted = secondsRemaining.toString().padStart(2, '0');
+      const durationFormatted = `${minutesFormatted}:${secondsFormatted}`;
+      return durationFormatted;
+  }
+
   return (
     <div className="App">
       <h1>Tube Beats</h1>
@@ -66,7 +85,7 @@ function App() {
         <div>
           <h2>{video.title}</h2>
 
-          <p>Duração: {video.duration} segundos</p>
+          <p>Duração: {video.durationFormatted}</p>
           <img src={video.thumbnail} alt={video.title} />
         </div>
       )}
