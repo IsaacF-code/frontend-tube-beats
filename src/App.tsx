@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import VideoResult from './components/VideoResult';
+import SearchForm from './components/SearchForm';
+import './App.css';
 
 type VideoInfo = {
   title: string;
@@ -82,29 +85,22 @@ function App() {
   }
 
   return (
-    <div className="App">
-      <h1>Tube Beats</h1>
-      <input
-        type="text"
-        placeholder="Digite a URL do YouTube"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
+    <div className="app">
+      <main className='container'>
+        <h1>Tube Beats</h1>
+
+        <SearchForm
+          url={url}
+          onChange={setUrl}
+          onSearch={handleSearch}
+          loading={loading}
         />
-      <button onClick={handleSearch} disabled={loading}>
-        {loading ? "Buscando..." : "Buscar"}
-      </button>
 
-      {error && (
-        <p style={{ color: 'red' }}>{error}</p>
-      )}
-      {video && (
-        <div>
-          <h2>{video.title}</h2>
-
-          <p>Duração: {video.durationFormatted}</p>
-          <img src={video.thumbnail} alt={video.title} />
-        </div>
-      )}
+        {error && (
+          <p style={{ color: 'red' }}>{error}</p>
+        )}
+        {video && <VideoResult video={video} />}
+      </main>
     </div>
   );
 }
