@@ -87,7 +87,10 @@ function App() {
   return (
     <div className="app">
       <main className='container'>
-        <h1>Tube Beats</h1>
+        <h1 className="app-title">Tube Beats</h1>
+        <p className="app-subtitle">
+          Baixe suas músicas e vídeos favoritos do YouTube.
+        </p>
 
         <SearchForm
           url={url}

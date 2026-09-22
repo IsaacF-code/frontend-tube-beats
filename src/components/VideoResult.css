@@ -3,8 +3,10 @@
   gap: 20px;
   width: 100%;
   max-width: 700px;
+  margin: 0 auto;
   padding: 16px;
-  border: 1px solid #ddd;
+  background-color: #181818;
+  border: 1px solid #2a2a2a;
   border-radius: 12px;
   box-sizing: border-box;
 }
@@ -15,6 +17,11 @@
   object-fit: cover;
   border-radius: 8px;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.video-result:hover .video-thumbnail {
+  transform: scale(1.02);
 }
 
 .video-info {
@@ -31,7 +38,8 @@
 
 .video-duration {
   margin: 0;
-  font-size: 1rem;
+  color: #aaa;
+  font-size: 0.95rem;
 }
 
 @media (max-width: 600px) {
