@@ -6,9 +6,10 @@ type VideoResultProps = {
         durationFormatted: string;
         thumbnail: string;
     };
+    onDownload: () => void;
 };
 
-function VideoResult({ video }: VideoResultProps) {
+function VideoResult({ video, onDownload }: VideoResultProps) {
     return (
         <div className="video-result">
           <img 
@@ -19,6 +20,11 @@ function VideoResult({ video }: VideoResultProps) {
             <div className="video-info">
               <h2 className="video-title">{video.title}</h2>
               <p className="video-duration">Duração: {video.durationFormatted}</p>
+             <div>
+              <button onClick={onDownload}>
+                Baixar MP3
+              </button>
+             </div>
             </div>
         </div>
     )

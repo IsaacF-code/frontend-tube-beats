@@ -44,7 +44,7 @@ function App() {
 
       const data = await response.json();
       
-      console.log("React: ", data);
+      console.log("React Search: ", data);
 
       if (!response.ok) {
         setError(data.error);
@@ -62,6 +62,37 @@ function App() {
       setLoading(false);
     }
     
+  }
+
+  async function handleDownload() {
+    const response = await fetch("http://localhost:3000/api/video/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        url: url,
+      }),
+    });
+
+    const blob = await response.blob();
+
+    const downloadUrl = URL.createObjectURL(blob)
+    console.log(downloadUrl);
+
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    
+    const contentDisposition = response.headers.get("Content-Disposition");
+    console.log(contentDisposition);
+    
+    const match = contentDisposition?.match(/filename\*=UTF-8''(.+)/i);
+
+    const fileName = match ? decodeURIComponent(match[1]) : "música.mp3";
+
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(downloadUrl);
   }
 
   function formatDuration(duration: number): string { // Convertendo a duração de segundos para minutos
@@ -102,7 +133,7 @@ function App() {
         {error && (
           <p style={{ color: 'red' }}>{error}</p>
         )}
-        {video && <VideoResult video={video} />}
+        {video && <VideoResult video={video} onDownload={handleDownload} />}
       </main>
     </div>
   );
