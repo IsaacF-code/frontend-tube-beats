@@ -7,9 +7,10 @@ type VideoResultProps = {
         thumbnail: string;
     };
     onDownload: () => void;
+    downloading: boolean;
 };
 
-function VideoResult({ video, onDownload }: VideoResultProps) {
+function VideoResult({ video, onDownload, downloading }: VideoResultProps) {
     return (
         <div className="video-result">
           <img 
@@ -21,8 +22,8 @@ function VideoResult({ video, onDownload }: VideoResultProps) {
               <h2 className="video-title">{video.title}</h2>
               <p className="video-duration">Duração: {video.durationFormatted}</p>
              <div>
-              <button onClick={onDownload}>
-                Baixar MP3
+              <button onClick={onDownload} disabled={downloading}>
+                {downloading ? "Baixando...": "Baixar MP3"}
               </button>
              </div>
             </div>

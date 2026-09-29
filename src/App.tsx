@@ -15,6 +15,7 @@ function App() {
   const [video, setVideo] = useState<VideoInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   async function handleSearch() {
     setError(null);
@@ -55,7 +56,7 @@ function App() {
         durationFormatted: formatDuration(data.data.duration)
       });
     } catch (error) {
-      console.error("Erro: ", error);
+      console.error("Erro search: ", error);
       
       setError("Erro ao buscar informações do vídeo. Por favor, tente novamente mais tarde.");
     } finally {
@@ -65,34 +66,50 @@ function App() {
   }
 
   async function handleDownload() {
-    const response = await fetch("http://localhost:3000/api/video/download", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        url: url,
-      }),
-    });
+    setError(null)
+    setDownloading(true);
 
-    const blob = await response.blob();
+    try {
+      const response = await fetch("http://localhost:3000/api/video/download", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: url,
+        }),
+      });
 
-    const downloadUrl = URL.createObjectURL(blob)
-    console.log(downloadUrl);
+      if (!response.ok) {
+        throw new Error ("Não foi possível baixar o áudio.");
+      }
 
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    
-    const contentDisposition = response.headers.get("Content-Disposition");
-    console.log(contentDisposition);
-    
-    const match = contentDisposition?.match(/filename\*=UTF-8''(.+)/i);
+      const blob = await response.blob();
 
-    const fileName = match ? decodeURIComponent(match[1]) : "música.mp3";
+      const downloadUrl = URL.createObjectURL(blob)
+      console.log(downloadUrl);
 
-    link.download = fileName;
-    link.click();
-    URL.revokeObjectURL(downloadUrl);
+      const link = document.createElement("a");
+      link.href = downloadUrl;
+      
+      const contentDisposition = response.headers.get("Content-Disposition");
+      console.log(contentDisposition);
+      
+      const match = contentDisposition?.match(/filename\*=UTF-8''(.+)/i);
+
+      const fileName = match ? decodeURIComponent(match[1]) : "música.mp3";
+
+      link.download = fileName;
+      link.click();
+      URL.revokeObjectURL(downloadUrl);
+    }
+    catch (error) {
+      console.log("Erro download: ", error)
+      setError('Erro ao baixar. Por favor, tente novamente mais tarde.')
+    }
+    finally {
+      setDownloading(false);
+    }
   }
 
   function formatDuration(duration: number): string { // Convertendo a duração de segundos para minutos
@@ -133,7 +150,7 @@ function App() {
         {error && (
           <p style={{ color: 'red' }}>{error}</p>
         )}
-        {video && <VideoResult video={video} onDownload={handleDownload} />}
+        {video && <VideoResult video={video} onDownload={handleDownload} downloading={downloading} />}
       </main>
     </div>
   );
