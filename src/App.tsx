@@ -3,6 +3,8 @@ import VideoResult from './components/VideoResult';
 import SearchForm from './components/SearchForm';
 import './App.css';
 import { getVideoInfo, getVideoDownload } from './services/Api.ts';
+import { formatDuration } from './utils/formatDuration.ts';
+import { isYoutubeUrl } from './utils/isYoutubeUrl.ts';
 
 type VideoInfo = {
   title: string;
@@ -81,25 +83,7 @@ function App() {
     }
   }
 
-  function formatDuration(duration: number): string { // Convertendo a duração de segundos para minutos
-      const minutes = Math.floor(duration / 60);
-      const secondsRemaining = duration % 60;
-      const minutesFormatted = minutes.toString().padStart(2, '0');
-      const secondsFormatted = secondsRemaining.toString().padStart(2, '0');
-      const durationFormatted = `${minutesFormatted}:${secondsFormatted}`;
-      return durationFormatted;
-  }
-
-  function isYoutubeUrl(url: string): boolean {
-    try {
-      const parsedUrl = new URL(url);
-      return parsedUrl.hostname === "www.youtube.com" || 
-             parsedUrl.hostname === "youtube.com" ||
-             parsedUrl.hostname === "youtu.be";
-    } catch {
-      return false;
-    }
-  }
+  
 
   return (
     <div className="app">
