@@ -2,6 +2,7 @@ import { useState } from 'react';
 import VideoResult from './components/VideoResult';
 import SearchForm from './components/SearchForm';
 import './App.css';
+import { getVideoInfo, getVideoDownload } from './services/Api.ts';
 
 type VideoInfo = {
   title: string;
@@ -33,32 +34,21 @@ function App() {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/api/video/info", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: url,
-        })
-      })
+      const videoData = await getVideoInfo(url);
 
-      const data = await response.json();
-      
-      console.log("React Search: ", data);
-
-      if (!response.ok) {
-        setError(data.error);
-        return;
-      }
       setVideo({
-        ...data.data,
-        durationFormatted: formatDuration(data.data.duration)
+        ...videoData,
+        durationFormatted: formatDuration(videoData.duration)
       });
     } catch (error) {
       console.error("Erro search: ", error);
       
-      setError("Erro ao buscar informações do vídeo. Por favor, tente novamente mais tarde.");
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Erro ao buscar informações do vídeo. Por favor, tente novamente mais tarde.");
+      }
+
     } finally {
       setLoading(false);
     }
@@ -70,37 +60,16 @@ function App() {
     setDownloading(true);
 
     try {
-      const response = await fetch("http://localhost:3000/api/video/download", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          url: url,
-        }),
-      });
+      const videoDownload = await getVideoDownload(url)
 
-      if (!response.ok) {
-        throw new Error ("Não foi possível baixar o áudio.");
-      }
-
-      const blob = await response.blob();
-
-      const downloadUrl = URL.createObjectURL(blob)
-      console.log(downloadUrl);
+      const downloadUrl = URL.createObjectURL(videoDownload.blob)
 
       const link = document.createElement("a");
       link.href = downloadUrl;
+      link.download = videoDownload.fileName;
       
-      const contentDisposition = response.headers.get("Content-Disposition");
-      console.log(contentDisposition);
-      
-      const match = contentDisposition?.match(/filename\*=UTF-8''(.+)/i);
-
-      const fileName = match ? decodeURIComponent(match[1]) : "música.mp3";
-
-      link.download = fileName;
       link.click();
+      
       URL.revokeObjectURL(downloadUrl);
     }
     catch (error) {
