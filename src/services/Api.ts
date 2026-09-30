@@ -1,8 +1,4 @@
-export type VideoInfoResponse = {
-    title: string;
-    duration: number;
-    thumbnail: string;
-}
+import type { VideoInfoResponse } from "../types/video";
 
 export async function getVideoInfo(url: string): Promise<VideoInfoResponse> {
     const response = await fetch("http://localhost:3000/api/video/info", {

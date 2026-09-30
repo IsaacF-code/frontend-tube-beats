@@ -1,9 +1,10 @@
 import "./VideoResult.css"
+import { formatDuration } from "../utils/formatDuration";
 
 type VideoResultProps = {
     video: {
         title: string;
-        durationFormatted: string;
+        duration: number;
         thumbnail: string;
     };
     onDownload: () => void;
@@ -20,7 +21,7 @@ function VideoResult({ video, onDownload, downloading }: VideoResultProps) {
             />
             <div className="video-info">
               <h2 className="video-title">{video.title}</h2>
-              <p className="video-duration">Duração: {video.durationFormatted}</p>
+              <p className="video-duration">Duração: {formatDuration(video.duration)}</p>
              <div>
               <button onClick={onDownload} disabled={downloading}>
                 {downloading ? "Baixando...": "Baixar MP3"}

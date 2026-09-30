@@ -2,16 +2,9 @@ import { useState } from 'react';
 import VideoResult from './components/VideoResult';
 import SearchForm from './components/SearchForm';
 import './App.css';
-import { getVideoInfo, getVideoDownload } from './services/Api.ts';
-import { formatDuration } from './utils/formatDuration.ts';
-import { isYoutubeUrl } from './utils/isYoutubeUrl.ts';
-
-type VideoInfo = {
-  title: string;
-  duration: number;
-  durationFormatted: string;
-  thumbnail: string;
-};
+import { getVideoInfo, getVideoDownload } from './services/Api';
+import { isYoutubeUrl } from './utils/isYoutubeUrl';
+import type { VideoInfo } from './types/video';
 
 function App() {
   const [url, setUrl] = useState('');
@@ -38,10 +31,7 @@ function App() {
     try {
       const videoData = await getVideoInfo(url);
 
-      setVideo({
-        ...videoData,
-        durationFormatted: formatDuration(videoData.duration)
-      });
+      setVideo(videoData);
     } catch (error) {
       console.error("Erro search: ", error);
       
