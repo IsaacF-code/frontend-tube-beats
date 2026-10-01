@@ -1,12 +1,9 @@
 import "./VideoResult.css"
 import { formatDuration } from "../utils/formatDuration";
+import type { VideoInfo } from "../types/video";
 
 type VideoResultProps = {
-    video: {
-        title: string;
-        duration: number;
-        thumbnail: string;
-    };
+    video: VideoInfo;
     onDownload: () => void;
     downloading: boolean;
 };
