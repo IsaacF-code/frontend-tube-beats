@@ -38,7 +38,9 @@ export async function getVideoDownload(url: string): Promise<VideoDownload> {
       
       
       if (!response.ok) {
-          throw new Error ("Não foi possível baixar o áudio.");
+          const data = await response.json();
+
+          throw new Error (data.error ||"Não foi possível baixar o áudio.");
         }
         
       const blob: Blob = await response.blob();

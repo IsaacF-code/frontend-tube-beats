@@ -21,7 +21,14 @@ function VideoResult({ video, onDownload, downloading }: VideoResultProps) {
               <p className="video-duration">Duração: {formatDuration(video.duration)}</p>
              <div>
               <button onClick={onDownload} disabled={downloading}>
-                {downloading ? "Baixando...": "Baixar MP3"}
+                {downloading ? (
+                    <>
+                        <span className="loading-spinner"></span>
+                        Baixando...
+                    </>
+                ) : (
+                    "Baixar MP3"
+                )}
               </button>
              </div>
             </div>

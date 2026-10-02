@@ -9,7 +9,10 @@ type SearchFormProps = {
 
 function SearchForm({ url, onChange, onSearch, loading }: SearchFormProps) {
     return (
-        <div className="search-form">
+        <form className="search-form" onSubmit={(e) => {
+            e.preventDefault();
+            onSearch();
+        }}>
             <input
             className="search-input"
             type="text"
@@ -20,12 +23,19 @@ function SearchForm({ url, onChange, onSearch, loading }: SearchFormProps) {
 
             <button 
                 className="search-button"
-                onClick={onSearch} 
+                type="submit"
                 disabled={loading}
                 >
-                {loading ? "Buscando..." : "Buscar"}
+                {loading ? (
+                    <>
+                        <span className="loading-spinner"></span>
+                        Buscando...
+                    </>
+                ) : (
+                    "Buscar"
+                ) }
             </button>
-        </div>
+        </form>
     )
 }
 

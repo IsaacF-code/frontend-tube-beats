@@ -5,6 +5,7 @@ import './App.css';
 import { getVideoInfo, getVideoDownload } from './services/Api';
 import { isYoutubeUrl } from './utils/isYoutubeUrl';
 import type { VideoInfo } from './types/video';
+import ErrorMessage from './components/ErrorMessage';
 
 function App() {
   const [url, setUrl] = useState('');
@@ -66,7 +67,12 @@ function App() {
     }
     catch (error) {
       console.log("Erro download: ", error)
-      setError('Erro ao baixar. Por favor, tente novamente mais tarde.')
+
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Erro ao baixar. Por favor, tente novamente mais tarde.')
+      }
     }
     finally {
       setDownloading(false);
@@ -90,9 +96,7 @@ function App() {
           loading={loading}
         />
 
-        {error && (
-          <p style={{ color: 'red' }}>{error}</p>
-        )}
+        {error && <ErrorMessage message={error} />}
         {video && <VideoResult video={video} onDownload={handleDownload} downloading={downloading} />}
       </main>
     </div>
