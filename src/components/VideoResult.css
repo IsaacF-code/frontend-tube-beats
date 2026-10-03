@@ -8,7 +8,6 @@
   background-color: #181818;
   border: 1px solid #2a2a2a;
   border-radius: 12px;
-  box-sizing: border-box;
 }
 
 .video-thumbnail {
@@ -52,7 +51,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-
+  width: fit-content;
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
@@ -77,22 +76,6 @@
   opacity: 0.7;
 }
 
-.loading-spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @media (max-width: 600px) {
   .video-result {
     flex-direction: column;
@@ -101,5 +84,9 @@
   .video-thumbnail {
     width: 100%;
     height: auto;
+  }
+
+  .video-info button {
+    width: 100%;
   }
 }

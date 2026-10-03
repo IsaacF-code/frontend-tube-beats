@@ -1,4 +1,5 @@
 import "./SearchForm.css";
+import  "../index.css";
 
 type SearchFormProps = {
     url: string;
@@ -28,7 +29,10 @@ function SearchForm({ url, onChange, onSearch, loading }: SearchFormProps) {
                 >
                 {loading ? (
                     <>
-                        <span className="loading-spinner"></span>
+                        <span 
+                            className="loading-spinner"
+                            aria-hidden="true"
+                            ></span>
                         Buscando...
                     </>
                 ) : (

@@ -31,25 +31,23 @@ export async function getVideoDownload(url: string): Promise<VideoDownload> {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          url: url,
-        }),
+        body: JSON.stringify({ url }),
       });
       
       
       if (!response.ok) {
           const data = await response.json();
 
-          throw new Error (data.error ||"Não foi possível baixar o áudio.");
+          throw new Error (data.error || "Não foi possível baixar o áudio.");
         }
         
-      const blob: Blob = await response.blob();
+      const blob = await response.blob();
 
       const contentDisposition = response.headers.get("Content-Disposition");
       
       const match = contentDisposition?.match(/filename\*=UTF-8''(.+)/i);
 
-      const fileName: string = match ? decodeURIComponent(match[1]) : "música.mp3";
+      const fileName = match ? decodeURIComponent(match[1]) : "música.mp3";
 
       return {
         blob, fileName

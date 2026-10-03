@@ -34,7 +34,7 @@ function App() {
 
       setVideo(videoData);
     } catch (error) {
-      console.error("Erro search: ", error);
+      console.error("Erro ao buscar informações do vídeo: ", error);
       
       if (error instanceof Error) {
         setError(error.message);
@@ -49,13 +49,13 @@ function App() {
   }
 
   async function handleDownload() {
-    setError(null)
+    setError(null);
     setDownloading(true);
 
     try {
-      const videoDownload = await getVideoDownload(url)
+      const videoDownload = await getVideoDownload(url);
 
-      const downloadUrl = URL.createObjectURL(videoDownload.blob)
+      const downloadUrl = URL.createObjectURL(videoDownload.blob);
 
       const link = document.createElement("a");
       link.href = downloadUrl;
@@ -66,12 +66,12 @@ function App() {
       URL.revokeObjectURL(downloadUrl);
     }
     catch (error) {
-      console.log("Erro download: ", error)
+      console.error("Erro ao baixar o áudio: ", error)
 
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError('Erro ao baixar. Por favor, tente novamente mais tarde.')
+        setError('Erro ao baixar. Por favor, tente novamente mais tarde.');
       }
     }
     finally {
