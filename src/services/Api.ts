@@ -5,8 +5,9 @@ type VideoDownload = {
     fileName: string;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
 export async function getVideoInfo(url: string): Promise<VideoInfoResponse> {
-    const response = await fetch("http://localhost:3000/api/video/info", {
+    const response = await fetch(`${API_URL}/api/video/info`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -26,7 +27,7 @@ export async function getVideoInfo(url: string): Promise<VideoInfoResponse> {
 }
 
 export async function getVideoDownload(url: string): Promise<VideoDownload> {
-    const response = await fetch("http://localhost:3000/api/video/download", {
+    const response = await fetch(`${API_URL}/api/video/download`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
